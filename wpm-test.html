@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>英語速読WPM体験</title>
-  <meta name="robots" content="noindex,nofollow" />  <meta name="viewport" content="width-device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
      /* ===== ベース ===== */
     body {
@@ -27,19 +28,23 @@
     }
     .cta:after { content: "›"; font-size: 22px; line-height: 1 }
 
-    /* 英文枠 */
+    /* 英文枠（スマホ基準） */
     .passage, .demo-passage {
       border: 2px solid #000; background: #fff; border-radius: 8px;
-      padding: 22px; margin: 14px 0;
+      padding: 16px; margin: 14px 0;
       font-family: "Century Schoolbook","Georgia","Times New Roman",serif;
-      font-size: 28px;   /* 英文をさらに大きく */
-      line-height: 2.05;
+      font-size: 16px;      /* 本文16px */
+      line-height: 1.75;    /* 行間1.75 */
       width: 100%; max-width: none;
       text-align: justify; text-align-last: left;
       overflow-wrap: anywhere; word-break: normal; hyphens: auto;
       box-sizing: border-box;
     }
     .demo-passage { white-space: normal; word-spacing: 0 }
+
+    /* 見出し */
+    h2 { font-size: 22px; font-weight: bold; margin: 0.6em 0 0.4em; }
+    h3 { font-size: 19px; font-weight: bold; margin: 0.5em 0 0.3em; }
 
     /* カウントダウン */
     .countdown { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -73,7 +78,7 @@
       text-align: center; box-shadow: 0 1px 0 rgba(0,0,0,.05);
       color: #333; vertical-align: top;
     }
-    .wpm-big { font-size: 40px; font-weight: 800; margin: 8px 0 4px }
+    .wpm-big { font-size: 34px; font-weight: 800; margin: 8px 0 4px }
     #correct { margin-top: 6px; font-size: 24px }
 
     /* ボタン右側 */
@@ -90,10 +95,10 @@
 
     /* 問題解説 */
     .explain-area { margin-top: 20px }
-    .explain-area h3 { font-size: 24px; border-bottom: 2px solid #e74b6b; padding-bottom: 8px; margin: 0 0 10px }
+    .explain-area h3 { font-size: 20px; border-bottom: 2px solid #e74b6b; padding-bottom: 8px; margin: 0 0 10px }
     .exp-item { border-top: 1px dashed #ddd; padding: 12px 0 }
     .exp-item:first-child { border-top: none }
-    .exp-line { margin: 3px 0; color: #333; font-size: 22px; line-height: 1.4 }
+    .exp-line { margin: 3px 0; color: #333; font-size: 16px; line-height: 1.6 }
     .exp-label { color: #666; margin-right: 8px }
     .ico { display: inline-flex; align-items: center; justify-content: center;
       width: 26px; height: 26px; border-radius: 50%; font-size: 16px; font-weight: 800;
@@ -105,6 +110,17 @@
 
     /* 共通：ボタン行 */
     .btn-row { display: flex; flex-wrap: wrap; gap: 10px }
+
+    /* PC・タブレット用に自動拡大 */
+    @media (min-width: 768px) {
+      .passage, .demo-passage {
+        font-size: 18px;
+        line-height: 1.8;
+      }
+      h2 { font-size: 24px; }
+      h3 { font-size: 21px; }
+      .wpm-big { font-size: 38px; }
+    }
 
     @media (max-width:640px) {
       .cd-wrap { width: 170px; height: 170px }
@@ -119,7 +135,7 @@
 <!-- 1) Intro -->
 <div class="page active" id="page1">
   <h2>英語速読WPM体験</h2>
-  <p style="font-size:28px;">
+  <p>
     開始ボタンを押すと3秒後にテストが始まります。英文を理解しながらできるだけ速く読み、読み終わったら「ストップ」を押してください。続けて設問に答えると、WPMと正答数が表示されます。
   </p>
   <button class="cta" onclick="goPage(2)">開始する</button>
@@ -133,7 +149,7 @@
       Reading books is one of the best ways to gain new knowledge. People who read regularly can understand different cultures, histories, and ways of thinking. In today’s world, many students spend time on smartphones or social media, while reading provides deeper knowledge and imagination. For example, when you read a story, you can picture the characters and places, and imagine how they change. A video only shows you the image, but reading makes you create it. Reading also helps students write better. By noticing correct grammar and new vocabulary, students can use English more naturally. Although reading may seem slow at first, with repeated practice you can read faster and understand more. Therefore, developing reading speed is very important for success in entrance exams.
     </div>
     <button class="cta" id="stopBtn" onclick="stopReading()">読み終わったらここをクリックしてください</button>
-</div>
+  </div>
 </div>
 
 <!-- 3) Quiz -->

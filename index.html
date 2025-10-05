@@ -4,21 +4,35 @@
 <meta charset="UTF-8">
 <title>アクセス確認</title>
 <meta name="robots" content="noindex,nofollow">
-<style>body{font-family:sans-serif;margin:40px}input{padding:8px;font-size:16px}</style>
+<style>
+  body { font-family: sans-serif; margin: 40px; }
+  input { padding: 8px; font-size: 16px; }
+</style>
 </head>
 <body>
 <h2>アクセスコードを入力してください</h2>
-<input id="pin" type="password" placeholder="4桁" maxlength="8">
+<input id="pin" type="password" placeholder="8桁" maxlength="8" inputmode="numeric" pattern="\d*">
 <button onclick="go()">OK</button>
 <p id="msg" style="color:red;"></p>
+
 <script>
-const HASH = "39323135"; // アクセスコード 9215 の簡易ハッシュ
-function go(){
-  const v = document.getElementById('pin').value.trim();
-  const h = Array.from(v).reduce((a,c)=>a + c.charCodeAt(0).toString(16),'');
-  if(h===HASH){ location.href = "wpm-test.html"; }
-  else{ document.getElementById('msg').textContent="コードが違います"; }
-}
+  // アクセスコード 20260921 の簡易ハッシュ（各文字の charCode を16進で連結）
+  const HASH = "3230323630393231";
+
+  function go(){
+    const v = document.getElementById('pin').value.trim();
+    const h = Array.from(v).reduce((a,c)=>a + c.charCodeAt(0).toString(16), '');
+    if(h === HASH){
+      location.href = "wpm-test.html";
+    } else {
+      document.getElementById('msg').textContent = "コードが違います";
+    }
+  }
+
+  // Enterキーで送信
+  document.getElementById("pin").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){ go(); }
+  });
 </script>
 </body>
 </html>
