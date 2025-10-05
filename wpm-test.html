@@ -110,8 +110,8 @@
 <!-- 1) Intro -->
 <div class="page active" id="page1">
   <h2>英語速読WPM体験</h2>
-  <p>開始ボタンを押すと3秒後にテストが始まります。英文を理解しながらできるだけ速く読み、読み終わったら「ストップ」を押してください。続けて設問に答えると、WPMが表示されます。</p>
-  <button class="cta" onclick="goPage(2)">開始する</button>
+  <p>「スタート」ボタンを押すと3秒後にテストが始まります。英文を理解しながらできるだけ速く読み、読み終わったら「ストップ」を押してください。続けて設問に答えると、WPMが表示されます。</p>
+  <button class="cta" onclick="goPage(2)">スタート</button>
 </div>
 
 <!-- 2) Reading -->
@@ -119,7 +119,7 @@
   <div class="countdown" id="countdown"></div>
 
   <div id="readArea" style="display:none;">
-    <!-- 追加：左＝時間 mm:ss / 右＝ストップ -->
+    <!-- 左＝時間 mm:ss / 右＝ストップ -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <div id="timer" style="font-size:18px;font-weight:bold;color:#333;">時間 0:00</div>
       <button class="cta" id="stopBtn" onclick="stopReading()">ストップ</button>
@@ -171,6 +171,7 @@
   </div>
 
   <div class="btn-row" style="margin-top:6px;">
+    <button class="cta" onclick="goPage(4)">結果を見る</button>
     <button class="cta" onclick="goPage(6)">日本語訳を見る</button>
     <button class="cta" onclick="goPage(1)">はじめに戻る</button>
   </div>
@@ -180,13 +181,13 @@
 
 <!-- 6) 日本語訳 -->
 <div class="page" id="page6">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <h3 style="margin:0;">日本語訳</h3>
-    <div class="btn-row" style="margin:0;">
-      <button class="cta" onclick="goPage(1)">はじめに戻る</button>
-      <button class="cta" onclick="openSpeedDemo(100)">速度体験をする</button>
-      <button class="cta" onclick="goPage(4)">結果を見る</button>
-    </div>
+  <h3 style="margin:0;">日本語訳</h3>
+
+  <!-- 見出しの下に横並びボタン（速度体験/結果と統一） -->
+  <div class="btn-row" style="margin-top:8px; margin-bottom:12px;">
+    <button class="cta" onclick="openSpeedDemo(100)">速度体験をする</button>
+    <button class="cta" onclick="goPage(4)">結果を見る</button>
+    <button class="cta" onclick="goPage(1)">はじめに戻る</button>
   </div>
 
   <div class="passage">
@@ -389,23 +390,21 @@ let demoTimer=null, demoWords=[], demoIndex=0;
 
 function openSpeedDemo(wpm){
   goPage(5);
-  // 本文準備
   const box = document.getElementById("demoPassage");
   if(!box.innerHTML.trim()){
     const words = passageText.replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
     box.innerHTML = words.map(w=>`<span>${w}</span>`).join(' ');
   }
-  // デフォルト選択
   const defaultBtn = Array.from(document.querySelectorAll('.wpm-btn')).find(b=>b.textContent.includes(wpm));
   startSpeedDemo(wpm, defaultBtn);
 }
 
 function startSpeedDemo(wpm, btn){
-  // 1) 選択中スタイルの切替
+  // 選択中スタイルの切替
   document.querySelectorAll('.wpm-btn').forEach(b=>b.classList.remove('selected'));
   if(btn) btn.classList.add('selected');
 
-  // 2) タイマー＆本文準備
+  // タイマー＆本文準備
   if(demoTimer){ clearInterval(demoTimer); demoTimer=null; }
   const box = document.getElementById("demoPassage");
   if(!box.innerHTML.trim()){
@@ -416,7 +415,7 @@ function startSpeedDemo(wpm, btn){
   demoWords.forEach(s=>s.classList.remove('done','current'));
   demoIndex = 0;
 
-  // 3) 再生
+  // 再生
   const msPerWord = 60000 / wpm;
   if(demoWords.length>0) demoWords[0].classList.add('current');
 
