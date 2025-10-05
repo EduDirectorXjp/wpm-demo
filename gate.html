@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>アクセス確認</title>
+<meta name="robots" content="noindex,nofollow">
+<style>body{font-family:sans-serif;margin:40px}input{padding:8px;font-size:16px}</style>
+</head>
+<body>
+<h2>アクセスコードを入力してください</h2>
+<input id="pin" type="password" placeholder="4桁" maxlength="8">
+<button onclick="go()">OK</button>
+<p id="msg" style="color:red;"></p>
+<script>
+const HASH = "39323135"; // アクセスコード 9215 の簡易ハッシュ
+function go(){
+  const v = document.getElementById('pin').value.trim();
+  const h = Array.from(v).reduce((a,c)=>a + c.charCodeAt(0).toString(16),'');
+  if(h===HASH){ location.href = "index.html"; }
+  else{ document.getElementById('msg').textContent="コードが違います"; }
+}
+</script>
+</body>
+</html>
