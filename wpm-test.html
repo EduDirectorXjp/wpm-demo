@@ -6,127 +6,102 @@
   <meta name="robots" content="noindex,nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-     /* ===== ベース ===== */
-    body {
-      font-family: "UD Digi Kyokasho N-R","Meiryo",sans-serif;
-      margin: 16px;
-      line-height: 2.0;
-      font-size: 23px;
+    /* ===== ベース（スマホ優先） ===== */
+    :root{
+      --brand:#e74b6b;
+      --btn-h:42px;
+      --btn-minw:160px;
+      --gap:12px;
     }
-    h1,h2,h3 { font-weight: bold }
-    .page { display: none }
-    .active { display: block }
-
-    /* 共通ボタン */
-    .cta {
-      display: inline-flex; align-items: center; justify-content: center; gap: .5em;
-      padding: 14px 22px; border: 2px solid #e74b6b; color: #e74b6b;
-      background: linear-gradient(#fff,#f6f6f6); border-radius: 14px;
-      font-size: 21px;
-      text-decoration: none; cursor: pointer; box-shadow: 0 1px 0 rgba(0,0,0,.05);
-      margin: 8px 8px 0 0; min-width: 220px;
+    body{
+      font-family:"UD Digi Kyokasho N-R","Meiryo",sans-serif;
+      margin:16px; font-size:16px; line-height:1.75;
     }
-    .cta:after { content: "›"; font-size: 22px; line-height: 1 }
+    h1,h2,h3{font-weight:bold; margin:.8em 0 .5em}
+    h2{font-size:22px} h3{font-size:18px}
+    .page{display:none} .active{display:block}
 
-    /* 英文枠（スマホ基準） */
-    .passage, .demo-passage {
-      border: 2px solid #000; background: #fff; border-radius: 8px;
-      padding: 16px; margin: 14px 0;
-      font-family: "Century Schoolbook","Georgia","Times New Roman",serif;
-      font-size: 16px;      /* 本文16px */
-      line-height: 1.75;    /* 行間1.75 */
-      width: 100%; max-width: none;
-      text-align: justify; text-align-last: left;
-      overflow-wrap: anywhere; word-break: normal; hyphens: auto;
-      box-sizing: border-box;
+    /* ===== 共通ボタン（赤枠） ===== */
+    .cta{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:var(--btn-h); min-width:var(--btn-minw);
+      padding:0 14px; gap:.4em;
+      border:2px solid var(--brand); color:var(--brand); background:#fff;
+      border-radius:8px; font-size:15px; font-weight:700;
+      text-decoration:none; cursor:pointer; white-space:nowrap;
     }
-    .demo-passage { white-space: normal; word-spacing: 0 }
+    .cta:after{content:"›"; line-height:1; font-size:15px}
 
-    /* 見出し */
-    h2 { font-size: 22px; font-weight: bold; margin: 0.6em 0 0.4em; }
-    h3 { font-size: 19px; font-weight: bold; margin: 0.5em 0 0.3em; }
-
-    /* カウントダウン */
-    .countdown { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-      background: #fff; z-index: 5; visibility: hidden }
-    .countdown.show { visibility: visible }
-    .cd-wrap { position: relative; width: 220px; height: 220px }
-    .cd-ring { position: absolute; inset: 0; border-radius: 50%;
-      background: conic-gradient(#e74b6b var(--deg,0deg), #f0f0f0 0) }
-    .cd-ring::after { content: ""; position: absolute; inset: 14px; border-radius: 50%;
-      background: #fff; box-shadow: inset 0 0 0 2px #eaeaea }
-    .cd-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 72px; font-weight: 800; color: #e74b6b; letter-spacing: .5px }
-
-    /* 設問 */
-    .qblock { margin: 18px 0; text-align: left }
-    .qblock p { margin: 0 0 10px }
-    .q-en { font-family: "Georgia","Times New Roman",serif }
-    .choice-en { font-family: "Georgia","Times New Roman",serif }
-    .qblock label { display: block; margin: 10px 0 }
-
-    /* 結果枠 */
-    .result-top {
-      display: flex; gap: 18px; align-items: stretch; flex-wrap: wrap;
-      margin-bottom: 12px;
+    /* 速度体験のWPMボタン：通常＝白地、選択中だけ反転 */
+    .wpm-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:var(--btn-h); min-width:var(--btn-minw);
+      padding:0 14px; gap:.4em;
+      border:2px solid var(--brand); color:var(--brand); background:#fff;
+      border-radius:8px; font-size:15px; font-weight:700;
+      text-decoration:none; cursor:pointer; white-space:nowrap;
+      transition:background .15s ease, color .15s ease, border-color .15s ease;
     }
-    .result-box {
-      display: inline-block;
-      width: 320px; height: 230px;
-      border: 2px solid #e74b6b; background: #fff; border-radius: 14px;
-      padding: 16px 18px;
-      text-align: center; box-shadow: 0 1px 0 rgba(0,0,0,.05);
-      color: #333; vertical-align: top;
-    }
-    .wpm-big { font-size: 34px; font-weight: 800; margin: 8px 0 4px }
-    #correct { margin-top: 6px; font-size: 24px }
+    .wpm-btn:after{content:"›"; line-height:1; margin-left:4px}
+    .wpm-btn.selected{ background:var(--brand); color:#fff; }
 
-    /* ボタン右側 */
-    .result-actions {
-      display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
-      min-width: 280px; flex: 1 1 280px;
-    }
-    .result-actions .row { display: flex; flex-wrap: wrap; gap: 10px }
+    .btn-row{ display:flex; gap:var(--gap); flex-wrap:wrap; }
 
-    /* デモ色付け */
-    .demo-passage span { transition: background-color .12s ease, color .12s ease }
-    .demo-passage .done { color: #d11; background-color: transparent; font-weight: inherit }
-    .demo-passage .current { background: #fff0f2; border-radius: 4px }
-
-    /* 問題解説 */
-    .explain-area { margin-top: 20px }
-    .explain-area h3 { font-size: 20px; border-bottom: 2px solid #e74b6b; padding-bottom: 8px; margin: 0 0 10px }
-    .exp-item { border-top: 1px dashed #ddd; padding: 12px 0 }
-    .exp-item:first-child { border-top: none }
-    .exp-line { margin: 3px 0; color: #333; font-size: 16px; line-height: 1.6 }
-    .exp-label { color: #666; margin-right: 8px }
-    .ico { display: inline-flex; align-items: center; justify-content: center;
-      width: 26px; height: 26px; border-radius: 50%; font-size: 16px; font-weight: 800;
-      margin-right: 8px; vertical-align: middle }
-    .ico.ok { background: #e7f7ee; color: #1e8e3e; border: 2px solid #1e8e3e }
-    .ico.ng { background: #feecee; color: #d11; border: 2px solid #d11 }
-    .ok { color: #1e8e3e; font-weight: 700 }
-    .ng { color: #d11; font-weight: 700 }
-
-    /* 共通：ボタン行 */
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px }
-
-    /* PC・タブレット用に自動拡大 */
-    @media (min-width: 768px) {
-      .passage, .demo-passage {
-        font-size: 18px;
-        line-height: 1.8;
-      }
-      h2 { font-size: 24px; }
-      h3 { font-size: 21px; }
-      .wpm-big { font-size: 38px; }
+    /* ===== 英文枠 ===== */
+    .passage,.demo-passage{
+      border:1px solid #000; background:#fff; border-radius:6px;
+      padding:14px; margin:12px 0;
+      font-family:"Century Schoolbook","Georgia","Times New Roman",serif;
+      font-size:16px; line-height:1.75;
+      text-align:justify; text-align-last:left; overflow-wrap:anywhere; hyphens:auto;
+      box-sizing:border-box;
     }
 
-    @media (max-width:640px) {
-      .cd-wrap { width: 170px; height: 170px }
-      .cd-num { font-size: 56px }
-      .result-box { width: 100%; height: auto; min-height: 210px }
-      .result-actions .row .cta { min-width: unset; flex: 1 }
+    /* 速度体験の色付け（現在語＝ピンク背景／既読＝赤字） */
+    .demo-passage span{ transition: background-color .12s ease, color .12s ease; }
+    .demo-passage .current{ background:#fff0f2; border-radius:4px; }
+    .demo-passage .done{ color:#c33; }
+
+    /* ===== カウントダウン ===== */
+    .countdown{position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      background:#fff; z-index:5; visibility:hidden}
+    .countdown.show{visibility:visible}
+    .cd-wrap{position:relative; width:180px; height:180px}
+    .cd-ring{position:absolute; inset:0; border-radius:50%;
+      background:conic-gradient(var(--brand) var(--deg,0deg), #f0f0f0 0)}
+    .cd-ring::after{content:""; position:absolute; inset:12px; border-radius:50%;
+      background:#fff; box-shadow:inset 0 0 0 1px #eaeaea}
+    .cd-num{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-size:52px; font-weight:800; color:var(--brand)}
+
+    /* ===== 理解度チェック ===== */
+    .qblock{margin:14px 0; text-align:left}
+    .qblock p{margin:0 0 8px}
+    .q-en,.choice-en{font-family:"Georgia","Times New Roman",serif}
+    .q-en,.choice-en,.qblock label{font-size:16px; line-height:1.75}
+    .qblock label{display:block; margin:6px 0}
+    .choice-label{display:inline-block; width:1.4em; font-weight:700; color:#666}
+
+    /* ===== 問題解説：詰めた2カラム ===== */
+    .exp-item{border-top:1px dashed #ddd; padding:10px 0}
+    .exp-row{
+      display:grid; grid-template-columns:4.2em 1fr;
+      column-gap:4px; row-gap:2px; align-items:start;
+      font-size:16px; line-height:1.75; margin:2px 0;
+    }
+    .exp-label{color:#666}
+    .ok{color:#1e8e3e; font-weight:700}
+    .ng{color:#d11; font-weight:700}
+    .ico{display:inline-flex; align-items:center; justify-content:center;
+      width:24px; height:24px; border-radius:50%; font-size:14px; font-weight:800; margin-left:6px}
+    .ico.ok{background:#e7f7ee; color:#1e8e3e; border:2px solid #1e8e3e}
+    .ico.ng{background:#feecee; color:#d11; border:2px solid #d11}
+
+    /* ===== レスポンシブ ===== */
+    @media (min-width:768px){
+      .passage,.demo-passage{font-size:18px; line-height:1.8}
+      h2{font-size:24px} h3{font-size:21px}
+      .cd-wrap{width:220px; height:220px} .cd-num{font-size:72px}
     }
   </style>
 </head>
@@ -135,20 +110,24 @@
 <!-- 1) Intro -->
 <div class="page active" id="page1">
   <h2>英語速読WPM体験</h2>
-  <p>
-    開始ボタンを押すと3秒後にテストが始まります。英文を理解しながらできるだけ速く読み、読み終わったら「ストップ」を押してください。続けて設問に答えると、WPMと正答数が表示されます。
-  </p>
+  <p>開始ボタンを押すと3秒後にテストが始まります。英文を理解しながらできるだけ速く読み、読み終わったら「ストップ」を押してください。続けて設問に答えると、WPMが表示されます。</p>
   <button class="cta" onclick="goPage(2)">開始する</button>
 </div>
 
 <!-- 2) Reading -->
 <div class="page" id="page2">
   <div class="countdown" id="countdown"></div>
+
   <div id="readArea" style="display:none;">
+    <!-- 追加：左＝時間 mm:ss / 右＝ストップ -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div id="timer" style="font-size:18px;font-weight:bold;color:#333;">時間 0:00</div>
+      <button class="cta" id="stopBtn" onclick="stopReading()">ストップ</button>
+    </div>
+
     <div class="passage" id="passage" lang="en">
       Reading books is one of the best ways to gain new knowledge. People who read regularly can understand different cultures, histories, and ways of thinking. In today’s world, many students spend time on smartphones or social media, while reading provides deeper knowledge and imagination. For example, when you read a story, you can picture the characters and places, and imagine how they change. A video only shows you the image, but reading makes you create it. Reading also helps students write better. By noticing correct grammar and new vocabulary, students can use English more naturally. Although reading may seem slow at first, with repeated practice you can read faster and understand more. Therefore, developing reading speed is very important for success in entrance exams.
     </div>
-    <button class="cta" id="stopBtn" onclick="stopReading()">読み終わったらここをクリックしてください</button>
   </div>
 </div>
 
@@ -156,34 +135,22 @@
 <div class="page" id="page3">
   <h3>理解度チェック</h3>
   <div id="quizArea"></div>
-  <button class="cta" onclick="checkQuiz()">結果を見る</button>
+  <div class="btn-row"><button class="cta" onclick="checkQuiz()">結果を見る</button></div>
 </div>
 
 <!-- 4) Result -->
 <div class="page" id="page4">
-  <h3>結果</h3>
-  <div class="result-top">
-    <div class="result-box">
-      <p>あなたのWPMは…</p>
-      <p class="wpm-big" id="wpm"></p>
-      <p id="correct"></p>
-    </div>
-    <div class="result-actions">
-      <div class="row">
-        <button class="cta" onclick="goPage(6)">日本語訳を見る</button>
-        <button class="cta" onclick="goPage(1)">はじめに戻る</button>
-      </div>
-      <div class="row">
-        <button class="cta" onclick="openSpeedDemo(80)">80 WPM を体験</button>
-        <button class="cta" onclick="openSpeedDemo(100)">100 WPM を体験</button>
-      </div>
-      <div class="row">
-        <button class="cta" onclick="openSpeedDemo(120)">120 WPM を体験</button>
-        <button class="cta" onclick="openSpeedDemo(150)">150 WPM を体験</button>
-        <button class="cta" onclick="openSpeedDemo(180)">180 WPM を体験</button>
-      </div>
-    </div>
+  <h3 style="display:flex;align-items:center;gap:10px;">
+    <span>結果</span>
+    <span id="wpmResult" style="font-size:20px;font-weight:700;color:var(--brand);">0 WPM</span>
+  </h3>
+
+  <div class="btn-row" style="margin:10px 0 16px;">
+    <button class="cta" onclick="goPage(6)">日本語訳を見る</button>
+    <button class="cta" onclick="openSpeedDemo(100)">速度体験をする</button>
+    <button class="cta" onclick="goPage(1)">はじめに戻る</button>
   </div>
+
   <div class="explain-area">
     <h3>問題解説</h3>
     <div id="explainArea"></div>
@@ -192,44 +159,52 @@
 
 <!-- 5) Speed Demo -->
 <div class="page" id="page5">
-  <h3 style="display:flex;align-items:center;gap:12px;">
-    速度体験 <span id="demoStatus2" style="font-size:26px;font-weight:800;color:#e74b6b;"></span>
-  </h3>
-  <div class="btn-row" style="margin-bottom:8px">
-    <button class="cta" onclick="startSpeedDemo(80)">80 WPM</button>
-    <button class="cta" onclick="startSpeedDemo(100)">100 WPM</button>
-    <button class="cta" onclick="startSpeedDemo(120)">120 WPM</button>
-    <button class="cta" onclick="startSpeedDemo(150)">150 WPM</button>
-    <button class="cta" onclick="startSpeedDemo(180)">180 WPM</button>
+  <h3 style="margin:0;">速度体験</h3>
+
+  <!-- WPM選択（選択中だけ反転） -->
+  <div class="btn-row" style="margin-top:10px;">
+    <button class="wpm-btn" onclick="startSpeedDemo(80,this)">80 WPM</button>
+    <button class="wpm-btn" onclick="startSpeedDemo(100,this)">100 WPM</button>
+    <button class="wpm-btn" onclick="startSpeedDemo(120,this)">120 WPM</button>
+    <button class="wpm-btn" onclick="startSpeedDemo(150,this)">150 WPM</button>
+    <button class="wpm-btn" onclick="startSpeedDemo(180,this)">180 WPM</button>
+  </div>
+
+  <div class="btn-row" style="margin-top:6px;">
     <button class="cta" onclick="goPage(6)">日本語訳を見る</button>
     <button class="cta" onclick="goPage(1)">はじめに戻る</button>
   </div>
+
   <div class="demo-passage" id="demoPassage" lang="en"></div>
 </div>
 
 <!-- 6) 日本語訳 -->
 <div class="page" id="page6">
-  <h3>日本語訳</h3>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <h3 style="margin:0;">日本語訳</h3>
+    <div class="btn-row" style="margin:0;">
+      <button class="cta" onclick="goPage(1)">はじめに戻る</button>
+      <button class="cta" onclick="openSpeedDemo(100)">速度体験をする</button>
+      <button class="cta" onclick="goPage(4)">結果を見る</button>
+    </div>
+  </div>
+
   <div class="passage">
     本を読むことは、新しい知識を得るための最良の方法のひとつです。定期的に読む人は、さまざまな文化や歴史、考え方を理解できます。今日の世界では、多くの学生がスマートフォンやSNSに時間を費やしていますが、読書はより深い知識と想像力を与えます。例えば物語を読むと、登場人物や場所を思い描き、その変化を想像できます。動画は映像をそのまま見せるだけですが、読書は自分でイメージを作り出します。読書はまた、正しい文法や新しい語彙に気づくことで英語を書く力を高めます。最初は遅く感じても、繰り返し練習することで速く、深く理解できるようになります。したがって、読書速度を高めることは入試で成功するために非常に重要です。
-  </div>
-  <div class="btn-row" style="margin-top:12px">
-    <button class="cta" onclick="goPage(1)">はじめに戻る</button>
-    <button class="cta" onclick="openSpeedDemo(100)">速度体験をする</button>
-    <button class="cta" onclick="goPage(4)">結果を見る</button>
   </div>
 </div>
 
 <script>
-/* ===== 基本状態 ===== */
+/* ===== 状態 ===== */
 let startTime, rawWPM = 0;
+let timerInterval = null;
 
 /* 本文テキスト＆語数 */
 const passageText = document.getElementById("passage").innerText;
-function countWords(txt){return txt.replace(/\s+/g,' ').trim().split(' ').filter(Boolean).length;}
+function countWords(txt){ return txt.replace(/\s+/g,' ').trim().split(' ').filter(Boolean).length; }
 let passageWords = countWords(passageText);
 
-/* ページ切替 */
+/* ページ遷移 */
 function goPage(n){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById("page"+n).classList.add("active");
@@ -268,6 +243,16 @@ function startCountdown(){
       cd.classList.remove("show");
       document.getElementById("readArea").style.display = "block";
       startTime = Date.now();
+
+      // タイマー開始
+      const timerEl = document.getElementById("timer");
+      if(timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(()=>{
+        const elapsedSec = Math.floor((Date.now() - startTime)/1000);
+        const m = Math.floor(elapsedSec/60);
+        const s = (elapsedSec%60).toString().padStart(2,'0');
+        timerEl.textContent = `時間 ${m}:${s}`;
+      },1000);
     }
   }
   requestAnimationFrame(tick);
@@ -275,12 +260,13 @@ function startCountdown(){
 
 /* 読了→WPM算出 */
 function stopReading(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval=null; }
   const timeSec = (Date.now() - startTime) / 1000;
   rawWPM = Math.max(0, Math.round(passageWords / timeSec * 60));
   goPage(3);
 }
 
-/* shuffle */
+/* シャッフル */
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -290,50 +276,57 @@ function shuffle(arr){
   return a;
 }
 
-/* 設問バンク */
+/* 設問バンク（6問） */
 const questionBank = [
   { id:"Q01", type:"mc",
     questionEn:"What is the main topic of the passage?",
     questionJp:"本文の主題は何ですか。",
     answer:"Reading and its benefits",
-    explain:"本文は『読書の良さ（メリット）』が主題です。",
-    choiceSets:[
-      ["Reading and its benefits","Sports training","Music performance"],
-      ["Reading and its benefits","Video editing","Cooking recipes"]
-    ]},
+    explain:"本文全体で、読書の利点（知識・想像力・文章力・試験への有用性）を述べています。",
+    choiceSets:[["Reading and its benefits","Sports training","Music performance","Cooking recipes"]] },
+
   { id:"Q02", type:"mc",
-    questionEn:"Reading helps students write better because they...",
-    questionJp:"読書が生徒の文章力を高めるのはなぜですか。",
-    answer:"notice correct grammar and new vocabulary",
-    explain:"『正しい文法や新しい語彙に気づく』から書く力が伸びると述べています。",
-    choiceSets:[
-      ["notice correct grammar and new vocabulary","avoid all grammar rules","memorize translations only"],
-      ["notice correct grammar and new vocabulary","watch short videos every day","never use a dictionary"]
-    ]},
-  { id:"Q03", type:"mc",
     questionEn:"What is one advantage of reading compared to just watching a video?",
     questionJp:"動画を見るだけの場合と比べて、読書の利点は何ですか。",
     answer:"It makes readers create the image in their minds.",
-    explain:"動画は画像を見せるだけで、読書は自分の頭の中でイメージを作る点が利点です。",
-    choiceSets:[
-      ["It makes readers create the image in their minds.","It always finishes faster.","It costs no internet data."],
-      ["It makes readers create the image in their minds.","It plays sound automatically.","It guarantees higher income."]
-    ]},
-  { id:"Q04", type:"cont",
+    explain:"動画は『画像を見せる』だけ、読書は『自分でイメージを作る』点が利点です。",
+    choiceSets:[["It makes readers create the image in their minds.","It always finishes faster.","It costs no internet data.","It guarantees higher income."]] },
+
+  { id:"Q03", type:"mc",
+    questionEn:"According to the passage, many students today spend time on ______.",
+    questionJp:"本文によると、今日多くの学生が時間を費やしているのは何ですか。",
+    answer:"smartphones or social media",
+    explain:"『many students spend time on smartphones or social media』と明記。",
+    choiceSets:[["smartphones or social media","reading novels every day","writing long essays","doing part-time jobs"]] },
+
+  { id:"Q04", type:"mc",
+    questionEn:"According to the passage, why is developing reading speed important?",
+    questionJp:"本文によると、読書速度を高めることが重要なのはなぜですか。",
+    answer:"It is very important for success in entrance exams.",
+    explain:"結論文で『entrance examsでの成功に非常に重要』と述べています。",
+    choiceSets:[["It is very important for success in entrance exams.","It reduces the price of textbooks.","It helps you remember every page number.","It lets you avoid studying grammar."]] },
+
+  { id:"Q05", type:"mc",
+    questionEn:'In the sentence "A video only shows you the image, but reading makes you create it.", the word "it" refers to ______.',
+    questionJp:'文「A video only shows you the image, but reading makes you create it.」の it が指すものはどれですか。',
+    answer:"the image",
+    explain:"『create it』は直前の the image を受ける代名詞です。",
+    choiceSets:[["the image","the video","the character","the story"]] },
+
+  { id:"Q06", type:"cont",
     promptEn:"Reading takes practice. [  ______  ] you can read faster and understand more.",
     questionJp:"空所に入る最も適切な語句はどれですか。",
     answer:"With practice,",
-    explain:"『練習すれば…できる』の流れなので With practice, が自然です。",
-    choiceSets:[
-      ["With practice,","However,","For example,"],
-      ["With practice,","But,","For example,"]
-    ]}
+    explain:"原因→結果の並びなので『With practice,（練習すれば）』が自然です。",
+    choiceSets:[["With practice,","However,","For example,","Suddenly,"]] }
 ];
-const TOTAL_QUESTIONS = 2;
+
+const TOTAL_QUESTIONS = 2; /* 必要なら 3 / 6 に変更可 */
 let currentQuiz = [];
 
-/* ランダム2問 */
+/* ランダム出題 */
 function buildRandomQuiz(){
+  const KATA = ["ア","イ","ウ","エ","オ","カ"];
   const quizArea = document.getElementById("quizArea");
   quizArea.innerHTML = "";
   const picked = shuffle(questionBank).slice(0, TOTAL_QUESTIONS);
@@ -346,13 +339,13 @@ function buildRandomQuiz(){
     if(item.type === "cont"){
       block.innerHTML = `
         <p class="q-en">Q${idx+1}. Choose the best continuation to fill the blank.</p>
-        <p class="q-en" style="margin:6px 0 10px;">${item.promptEn}</p>
-        ${choices.map(c => `<label class="choice-en"><input type="radio" name="${name}" value="${c}"> ${c}</label>`).join("")}
+        <p class="q-en" style="margin:6px 0 8px;">${item.promptEn}</p>
+        ${choices.map((c,i)=>`<label class="choice-en"><input type="radio" name="${name}" value="${c}"> <span class="choice-label">${KATA[i]||""}</span>${c}</label>`).join("")}
       `;
-    } else {
+    }else{
       block.innerHTML = `
         <p class="q-en">Q${idx+1}. ${item.questionEn}</p>
-        ${choices.map(c => `<label class="choice-en"><input type="radio" name="${name}" value="${c}"> ${c}</label>`).join("")}
+        ${choices.map((c,i)=>`<label class="choice-en"><input type="radio" name="${name}" value="${c}"> <span class="choice-label">${KATA[i]||""}</span>${c}</label>`).join("")}
       `;
     }
     quizArea.appendChild(block);
@@ -360,17 +353,17 @@ function buildRandomQuiz(){
   });
 }
 
-/* 採点 */
+/* 採点＆解説＋結果表示 */
 function checkQuiz(){
-  let correct = 0;
   currentQuiz.forEach(q=>{
     const chosen = document.querySelector(`input[name='${q.name}']:checked`);
     q.userChoice = chosen ? chosen.value : null;
-    if(q.userChoice === q.answer){ correct++; }
   });
-  document.getElementById("wpm").textContent = rawWPM;
-  document.getElementById("correct").textContent = `${correct}/${currentQuiz.length} 問 正解`;
 
+  /* 結果ページの見出し横に赤文字でWPMを出す */
+  document.getElementById("wpmResult").textContent = rawWPM + " WPM";
+
+  /* 解説生成（コロン右は詰め） */
   const exp = document.getElementById("explainArea");
   exp.innerHTML = currentQuiz.map((q,i)=>{
     const isCorrect = q.userChoice === q.answer;
@@ -379,38 +372,54 @@ function checkQuiz(){
     const yourAns = q.userChoice ?? '（未選択）';
     return `
       <div class="exp-item">
-        <div class="exp-line"><b>Q${i+1} ${mark}</b></div>
-        <div class="exp-line"><span class="exp-label">英文：</span><span class="q-en">${problemEn}</span></div>
-        <div class="exp-line"><span class="exp-label">解答：</span><span class="${isCorrect?'ok':'ng'}">${yourAns}</span></div>
-        <div class="exp-line"><span class="exp-label">正答：</span><b>${q.answer}</b></div>
-        <div class="exp-line"><span class="exp-label">質問：</span>${q.item.questionJp}</div>
-        <div class="exp-line"><span class="exp-label">解説：</span>${q.item.explain}</div>
+        <div class="exp-row"><b>Q${i+1}</b><span>${mark}</span></div>
+        <div class="exp-row"><span class="exp-label">英文：</span><span class="q-en">${problemEn}</span></div>
+        <div class="exp-row"><span class="exp-label">解答：</span><span class="${isCorrect?'ok':'ng'}">${yourAns}</span></div>
+        <div class="exp-row"><span class="exp-label">正答：</span><span><b>${q.answer}</b></span></div>
+        <div class="exp-row"><span class="exp-label">質問：</span><span>${q.item.questionJp}</span></div>
+        <div class="exp-row"><span class="exp-label">解説：</span><span>${q.item.explain}</span></div>
       </div>
     `;
   }).join("");
   goPage(4);
 }
 
-/* 速度体験 */
+/* 速度体験（選択中だけ反転＋ワード色付け） */
 let demoTimer=null, demoWords=[], demoIndex=0;
+
 function openSpeedDemo(wpm){
   goPage(5);
-  const words = passageText.replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
+  // 本文準備
   const box = document.getElementById("demoPassage");
-  box.innerHTML = words.map(w => `<span>${w}</span>`).join(' ');
-  demoWords = Array.from(box.querySelectorAll('span'));
-  demoIndex = 0;
-  document.getElementById("demoStatus2").textContent = `${wpm} WPM`;
-  startSpeedDemo(wpm);
+  if(!box.innerHTML.trim()){
+    const words = passageText.replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
+    box.innerHTML = words.map(w=>`<span>${w}</span>`).join(' ');
+  }
+  // デフォルト選択
+  const defaultBtn = Array.from(document.querySelectorAll('.wpm-btn')).find(b=>b.textContent.includes(wpm));
+  startSpeedDemo(wpm, defaultBtn);
 }
-function startSpeedDemo(wpm){
+
+function startSpeedDemo(wpm, btn){
+  // 1) 選択中スタイルの切替
+  document.querySelectorAll('.wpm-btn').forEach(b=>b.classList.remove('selected'));
+  if(btn) btn.classList.add('selected');
+
+  // 2) タイマー＆本文準備
   if(demoTimer){ clearInterval(demoTimer); demoTimer=null; }
-  if(!demoWords.length){ openSpeedDemo(wpm); return; }
-  demoWords.forEach(s => s.classList.remove('done','current'));
+  const box = document.getElementById("demoPassage");
+  if(!box.innerHTML.trim()){
+    const words = passageText.replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
+    box.innerHTML = words.map(w=>`<span>${w}</span>`).join(' ');
+  }
+  demoWords = Array.from(box.querySelectorAll('span'));
+  demoWords.forEach(s=>s.classList.remove('done','current'));
   demoIndex = 0;
+
+  // 3) 再生
   const msPerWord = 60000 / wpm;
   if(demoWords.length>0) demoWords[0].classList.add('current');
-  document.getElementById("demoStatus2").textContent = `${wpm} WPM`;
+
   demoTimer = setInterval(()=>{
     if(demoIndex < demoWords.length){
       demoWords[demoIndex].classList.remove('current');
@@ -419,9 +428,7 @@ function startSpeedDemo(wpm){
       if(demoIndex < demoWords.length){
         demoWords[demoIndex].classList.add('current');
       }else{
-        clearInterval(demoTimer);
-        demoTimer=null;
-        document.getElementById("demoStatus2").textContent = `${wpm} WPM 完了`;
+        clearInterval(demoTimer); demoTimer=null;
       }
     }
   }, msPerWord);
